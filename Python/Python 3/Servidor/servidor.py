@@ -39,9 +39,9 @@ class Servidor():
         while True:
             try:
                 msg = con.recv(1024)
-                msg_s = str(msg.decode('ascii'))
-                resp = eval(msg_s)
-                con.send(bytes(str(resp), 'ascii'))
+                msg_s = str(msg.decode('ascii')) # codificação para bytes
+                resp = eval(msg_s) # processamento
+                con.send(bytes(str(resp), 'ascii')) #decodificação
                 print(client, " -> requisição atendida")
             except OSError as e:
                 print("Erro de conexão ", client, ": ", e.args)

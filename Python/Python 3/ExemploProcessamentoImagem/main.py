@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 # leitura da imagem
-caminho_imagem = 'faces/image_0001.jpg'
+caminho_imagem = r'C:\Users\camil\OneDrive\Área de Trabalho\Inf_Ind\InformaticaIndustrialUFJF\Python\Python 3\ExemploProcessamentoImagem\faces\image_0002.jpg'
 img = cv2.imread(caminho_imagem)
 
 # codificação para bytes

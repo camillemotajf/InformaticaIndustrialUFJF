@@ -12,4 +12,3 @@ plt.xlabel("Tempo [s]")
 plt.ylabel("Tensão [V]")
 plt.plot(t,y)
 plt.show()
-

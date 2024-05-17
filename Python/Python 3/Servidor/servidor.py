@@ -5,13 +5,13 @@ class Servidor():
     Classe Servidor - API Socket
     """
 
-    def __init__(self, host, port):
+    def __init__(self, host, port): # cria o objeto socket
         """
         Construtor da classe servidor
         """
         self._host = host
         self._port = port
-        self.__tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.__tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # classe de endereço de comunicação, tipo do socket
 
 
     def start(self):
@@ -20,12 +20,12 @@ class Servidor():
         """
         endpoint = (self._host, self._port)
         try:
-            self.__tcp.bind(endpoint)
-            self.__tcp.listen(1)
+            self.__tcp.bind(endpoint) # atribui o ip e a porta para o serviço
+            self.__tcp.listen(1) # espera o cliente -> escuta de clientes -> servidor apto a receber clientes
             print("Servidor iniciado em ", self._host, ": ", self._port)
             while True:
-                con, client = self.__tcp.accept()
-                self._service(con, client)
+                con, client = self.__tcp.accept() # fica nessa linha até um cliente tentar se comunicar
+                self._service(con, client) # serviço disponibilizado pelo servidor
         except Exception as e:
             print("Erro ao inicializar o servidor", e.args)
 
@@ -38,10 +38,10 @@ class Servidor():
         print("Atendendo cliente ", client)
         while True:
             try:
-                msg = con.recv(1024)
-                msg_s = str(msg.decode('ascii')) # codificação para bytes
+                msg = con.recv(1024) # recebe a mensagem do cliente em bytes
+                msg_s = str(msg.decode('ascii')) # decodificação 
                 resp = eval(msg_s) # processamento
-                con.send(bytes(str(resp), 'ascii')) #decodificação
+                con.send(bytes(str(resp), 'ascii')) # codificação
                 print(client, " -> requisição atendida")
             except OSError as e:
                 print("Erro de conexão ", client, ": ", e.args)
@@ -49,5 +49,5 @@ class Servidor():
             except Exception as e:
                 print("Erro nos dados recebidos pelo cliente ",
                       client, ": ", e.args)
-                con.send(bytes("Erro", 'ascii'))
+                con.send(bytes("Erro", 'ascii')) # mensagem de erro enviada ao cliente
                 return

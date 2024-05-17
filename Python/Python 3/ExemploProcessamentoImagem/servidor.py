@@ -26,19 +26,21 @@ class Servidor():
         print("Atendendo ao Cliente: ", client)
         while True:
             try:
-                caminho = con.recv(4096) # recebe o caminho da imagem a ser processada em bytes
-                caminho = str(caminho.decode('utf-8'))
-                img = cv2.imread(caminho)
 
+                # recebe a tupla enviada do cliente
+                img_bytes = con.recv(65536) 
+                # print(img_bytes)
+                tam_bytes= len(img_bytes).to_bytes(4, 'big')
+                print('imagem recebida: ', tam_bytes)
 
                 # # codificação para bytes
                 # _, img_bytes = cv2.imencode('.jpg', img) 
                 # img_bytes = bytes(img_bytes)
                 # tamanho_da_imagem_codificado = len(img_bytes).to_bytes(4, 'big')
 
-                #  # decodificação
-                # tam = int.from_bytes(tamanho_da_imagem_codificado, 'big')
-                # img = cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
+                # decodificação
+                # tam = int.from_bytes(tam_bytes, 'big')
+                img = cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
 
                 # processamento
                 xml_classificador = os.path.join(os.path.relpath(
@@ -53,13 +55,13 @@ class Servidor():
                     cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
                 # codificando a imagem processada para bytes
-                _, img_bytes_p = cv2.imencode('.png', img) 
+                _, img_bytes_p = cv2.imencode('.jpg', img) 
                 img_bytes_p = bytes(img)
                 tamanho_da_imagem_codificado_p = len(img).to_bytes(4, 'big')
 
                 # envio a imagem processada em bytes para o cliente
-                tupla = (img_bytes_p, tamanho_da_imagem_codificado_p)
-                con.send(tupla)
+                con.send(img_bytes_p)
+                print("imagem enviada: ", tamanho_da_imagem_codificado_p)
                 print(client, "-> requisição atendida")
 
             except OSError as e:

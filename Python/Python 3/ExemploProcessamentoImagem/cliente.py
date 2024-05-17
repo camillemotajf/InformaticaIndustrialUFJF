@@ -8,54 +8,60 @@ class Cliente():
         self.__port = port
         self.__tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def start(self):
+    def start(self, caminho):
         endpoint = (self.__server_ip, self.__port)
         try:
             self.__tcp.connect(endpoint)
             print("Conexão Realizada com Sucesso!")
-            self.__method()
+            self.__method(caminho)
         except:
             print('Servidor não disponível')
 
-    def __method(self):
+    def __method(self, caminho):
         try:
-            caminho = ''
-            while True:
-                caminho = input("Digite o caminho da imagem a ser processada (x para sair): ")
-                if caminho == '':
-                    continue
-                elif caminho == 'x':
-                    break
-                # envia o caminho em bytes
-                print(type(caminho))
-                caminho_cod = bytes(caminho, 'ascii')
-                print(type(caminho_cod))
-                self.__tcp.send(caminho_cod) 
-                print('ok')
 
-                # recebe uma tupla em bytes -> (img, tam)
-                resp = self.__tcp.recv(4096)
+            img = cv2.imread(caminho) # le a imagem do caminho
 
-                img_bytes = resp[0].to_bytes(len(str(resp[0])), 'big') # Decodifica os bytes para string
-                tam_bytes = resp[1].to_bytes(len(str(resp[1])), 'big') # Decodifica os bytes para string
-                print('ok 2', img_bytes, tam_bytes)
+            if img is None:
+                print(f"Error loading image: {caminho}")
+            else:
+                print("Image loaded successfully")
 
-                # decodifica a imagem de bytes para formato original
-                tam = int.from_bytes(tam_bytes, 'big')
-                print('ok 3')
-                img = cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
-                print('ok 4')
+            # codifica para bytes
+            _, img_bytes = cv2.imencode('.jpg', img) 
+            img_bytes = bytes(img_bytes)
+            tam_bytes= len(img_bytes).to_bytes(4, 'big')
+            # print(img_bytes)
+            print(tam_bytes)
+            # print(resp)
 
-                if img is None:
-                    print("Erro: Não foi possível carregar a imagem.")
-                else:
-                    cv2.imshow('Imagem', img)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows()
-                
-                # # mostra a imagem processada na tela
-                # cv2.imshow('Imagem Processada', img)
-                # cv2.waitKey(0) 
+            # envia a imagem em bytes para o servidor
+            self.__tcp.send(img_bytes) 
+            print('imagem enviada: ', tam_bytes)
+
+            # recebe a img em bytes
+            img_bytes_serv = self.__tcp.recv(65536)
+            tam_bytes_serv = len(img_bytes_serv).to_bytes(4, 'big')
+            print(img_bytes_serv)
+            print('imagem recebida: ', tam_bytes_serv)
+
+            # decodifica a imagem de bytes para o formato original
+            img = cv2.imdecode(np.frombuffer(img_bytes_serv, np.uint8), cv2.IMREAD_COLOR)
+            print('ok 2')
+
+            # tamanho da imagem em bytes
+            # tam_bytes_serv= len(img).to_bytes(4, 'big')
+
+            # tam = int.from_bytes(tam_bytes_serv, 'big')
+
+            if img is None:
+                print("Erro: Não foi possível carregar a imagem.")
+            else:
+
+                # mostra a imagem processada para o cliente
+                cv2.imshow('Imagem Processada', img)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
         except Exception as e:
             print("Erro ao realizar comunicação com o servidor", e.args)

@@ -21,7 +21,7 @@ class Cliente():
         try:
             self.__tcp.connect(endpoint)
             print("Conexão realizada com sucesso!")
-            self.__method()
+            self.__method() # como será feita a comunicação com o servidor -> como a mensagem será enviada
         except:
             print("Servidor não disponível")
 
@@ -38,9 +38,9 @@ class Cliente():
                     continue
                 elif msg == 'x':
                     break
-                self.__tcp.send(bytes(msg,'ascii'))
-                resp = self.__tcp.recv(1024)
-                print("= ",resp.decode('ascii'))
+                self.__tcp.send(bytes(msg,'ascii')) # codifica e envia
+                resp = self.__tcp.recv(1024) # recebe a resposta do servidor
+                print("= ",resp.decode('ascii')) # decodifica 
             self.__tcp.close()
         except Exception as e:
             print("Erro ao realizar comunicação com o servidor", e.args)

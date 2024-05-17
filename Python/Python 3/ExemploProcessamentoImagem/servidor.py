@@ -22,46 +22,56 @@ class Servidor():
         except Exception as e:
             print("Erro ao inicializar o servidor", e.args)
 
+
+    def _faceServidor(self, img_bytes):
+        """ Define o procedimento a ser feito na imagem pelo servidor"""
+        
+        # decodificação
+        img = cv2.imdecode(np.frombuffer(
+        img_bytes, np.uint8), cv2.IMREAD_COLOR)        
+
+        # processamento
+        xml_classificador = os.path.join(os.path.relpath(
+            cv2.__file__).replace('__init__.py', ''), 'data\haarcascade_frontalface_default.xml')
+        face_cascade = cv2.CascadeClassifier(
+            xml_classificador)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+        # codificação da imagem processada
+        _, img_bytes_proc = cv2.imencode('.jpg', img)
+        img_bytes_proc = bytes(img_bytes_proc)
+        tam_bytes_proc = len(img_bytes_proc).to_bytes(4, 'big')
+
+        # mostra a imagem processada
+        # cv2.imshow('Imagem Processada', img)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()  
+
+        return img_bytes_proc
+
     def _service(self, con, client):
         print("Atendendo ao Cliente: ", client)
         while True:
             try:
 
-                # recebe a tupla enviada do cliente
-                img_bytes = con.recv(65536) 
-                # print(img_bytes)
-                tam_bytes= len(img_bytes).to_bytes(4, 'big')
-                print('imagem recebida: ', tam_bytes)
+                # recebe a imagem em bytes do cliente
+                tam_bytes = con.recv(1024)
+                print('tamanho recebido')
 
-                # # codificação para bytes
-                # _, img_bytes = cv2.imencode('.jpg', img) 
-                # img_bytes = bytes(img_bytes)
-                # tamanho_da_imagem_codificado = len(img_bytes).to_bytes(4, 'big')
+                tam = int.from_bytes(tam_bytes, 'big')
+                img_bytes = con.recv(tam) 
+                print('imagem recebido')
 
-                # decodificação
-                # tam = int.from_bytes(tam_bytes, 'big')
-                img = cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
-
-                # processamento
-                xml_classificador = os.path.join(os.path.relpath(
-                    cv2.__file__).replace('__init__.py', ''), 'data\haarcascade_frontalface_default.xml')
-                face_cascade = cv2.CascadeClassifier(
-                    xml_classificador)
-                gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-
-                # Desenha retângulos nas áreas onde as faces foram detectadas
-                for (x, y, w, h) in faces:
-                    cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-
-                # codificando a imagem processada para bytes
-                _, img_bytes_p = cv2.imencode('.jpg', img) 
-                img_bytes_p = bytes(img)
-                tamanho_da_imagem_codificado_p = len(img).to_bytes(4, 'big')
+                # procedimento realizado pelo servidor
+                img_bytes_proc = self._faceServidor(img_bytes)
 
                 # envio a imagem processada em bytes para o cliente
-                con.send(img_bytes_p)
-                print("imagem enviada: ", tamanho_da_imagem_codificado_p)
+                con.send(img_bytes_proc)
+                print("imagem enviada")
                 print(client, "-> requisição atendida")
 
             except OSError as e:

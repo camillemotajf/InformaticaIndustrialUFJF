@@ -10,16 +10,18 @@ class ContaBancaria:
 
     def __init__(self, saldo_inicial):
         self.saldo = saldo_inicial
-        self.lock = threading.Lock()
+        self.lock = threading.Lock() # cria um objeto lock que auxilia no compartilhamento de compartilhamento de recursos
 
     def transferir(self, valor):
-        with self.lock:
-            saldo_atual = self.saldo
-            time.sleep(0.1)
-            saldo_atual -= valor
-            time.sleep(0.1)
-            self.saldo = saldo_atual
-            print(f'Transferência realizada: {valor} | Saldo atual: {self.saldo}')
+        # with self.lock:
+        self.lock.acquire()
+        saldo_atual = self.saldo
+        time.sleep(0.1)
+        saldo_atual -= valor
+        time.sleep(0.1)
+        self.saldo = saldo_atual
+        print(f'Transferência realizada: {valor} | Saldo atual: {self.saldo}')
+        self.lock.release()
 
         
     def disparar_ordens(self, ordens):

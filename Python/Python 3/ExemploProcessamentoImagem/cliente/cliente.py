@@ -23,7 +23,10 @@ class Cliente():
 
         # codificação para bytes
         _, img_bytes = cv2.imencode('.jpg', img)
-        return img_bytes
+        img_bytes = bytes(img_bytes)
+        tam_bytes= len(img_bytes).to_bytes(4, 'big')
+        
+        return tam_bytes, img_bytes
     
     def _faceClienteRecebe(self, img_bytes):
 
@@ -41,12 +44,13 @@ class Cliente():
     def __method(self, caminho):
         try:
             
-            img_bytes = self._faceClienteEnviar(caminho) 
-            tam_bytes = len(img_bytes).to_bytes(4, 'big')
-
+            tam_bytes, img_bytes = self._faceClienteEnviar(caminho) 
+            tam_bytes = bytes(tam_bytes)
+            img_bytes = bytes(img_bytes)
 
             tam = int.from_bytes(tam_bytes, 'big')
             print(tam)
+
             if img_bytes is None:
                 print(f"Error loading image: {caminho}")
             else:
@@ -58,13 +62,18 @@ class Cliente():
             self.__tcp.send(img_bytes)
             print('imagem enviada pelo cliente')
 
-            # recebe a img em bytes
-            img_bytes_serv = self.__tcp.recv(tam)
+            # recebe o tamnho da imgem em bytes
+            tam_bytes_serv = self.__tcp.recv(1024)
+            tam_serv = int.from_bytes(tam_bytes_serv, 'big')
+
+            # recebe a imagem processada pelo servidor em bytes
+            img_bytes_serv = self.__tcp.recv(tam_serv)
+
+            # mostra a imegem processada pelo servidor
             self._faceClienteRecebe(img_bytes_serv)
 
             # if img_proc is None:
             #     print("Erro: Não foi possível carregar a imagem.")
-
 
         except Exception as e:
             print("Erro ao realizar comunicação com o servidor", e.args)

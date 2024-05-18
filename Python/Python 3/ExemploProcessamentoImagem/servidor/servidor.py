@@ -28,7 +28,7 @@ class Servidor():
         
         # decodificação
         img = cv2.imdecode(np.frombuffer(
-        img_bytes, np.uint8), cv2.IMREAD_COLOR)        
+            img_bytes, np.uint8), cv2.IMREAD_COLOR)        
 
         # processamento
         xml_classificador = os.path.join(os.path.relpath(
@@ -47,11 +47,11 @@ class Servidor():
         tam_bytes_proc = len(img_bytes_proc).to_bytes(4, 'big')
 
         # mostra a imagem processada
-        # cv2.imshow('Imagem Processada', img)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()  
+        cv2.imshow('Imagem Processada', img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()  
 
-        return img_bytes_proc
+        return tam_bytes_proc, img_bytes_proc
 
     def _service(self, con, client):
         print("Atendendo ao Cliente: ", client)
@@ -60,18 +60,22 @@ class Servidor():
 
                 # recebe a imagem em bytes do cliente
                 tam_bytes = con.recv(1024)
-                print('tamanho recebido')
-
+                print('tamanho recebido: ', type(tam_bytes))
                 tam = int.from_bytes(tam_bytes, 'big')
+
+                # recebe a imagem em bytes do cliente
                 img_bytes = con.recv(tam) 
-                print('imagem recebido')
+                print('imagem recebida: ', type(img_bytes))
 
                 # procedimento realizado pelo servidor
-                img_bytes_proc = self._faceServidor(img_bytes)
+                tam_bytes_proc, img_bytes_proc = self._faceServidor(img_bytes)
 
                 # envio a imagem processada em bytes para o cliente
+                con.send(tam_bytes_proc)
+                print("tamanho enviado ", type(tam_bytes_proc))
+
                 con.send(img_bytes_proc)
-                print("imagem enviada")
+                print("imagem enviada ", type(img_bytes_proc))
                 print(client, "-> requisição atendida")
 
             except OSError as e:

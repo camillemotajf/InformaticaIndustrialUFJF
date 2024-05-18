@@ -4,7 +4,7 @@ import os
 
 c = Cliente("127.0.0.1",9000)
 
-caminho = r'C:\Users\camil\OneDrive\Área de Trabalho\Inf_Ind\InformaticaIndustrialUFJF\Python\Python 3\ExemploProcessamentoImagem\faces\image_0001.jpg'
+caminho = r'C:\Users\camil\image_0002.jpg'
 if not os.path.exists(caminho):
     print(f"File not found: {caminho}")
 else:

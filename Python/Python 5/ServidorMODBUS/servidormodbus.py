@@ -12,7 +12,7 @@ class ServidorMODBUS():
         """
         Construtor
         """
-        self._db = DataBank()
+        self._db = DataBank() # tabela de armazenamento de dados do protocolo modbus
         self._server = ModbusServer(host=host_ip,port=port,no_block=True,data_bank=self._db)
        
         
@@ -21,9 +21,10 @@ class ServidorMODBUS():
         Execução do servidor Modbus
         """
         try:
-            self._server.start()
+            self._server.start() # faz os processos de bind, listen...
             print("Servidor MODBUS em execução")
             while True:
+                # modificação de uma palavra em um registro da tabela (endereço, valor)
                 self._db.set_holding_registers(1000,[random.randrange(int(0.95*400),int(1.05*400))])
                 print('======================')
                 print("Tabela MODBUS")

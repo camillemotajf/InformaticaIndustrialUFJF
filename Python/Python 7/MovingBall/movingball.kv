@@ -12,7 +12,7 @@
                     rgba: 0,0,1,1
                 Ellipse:
                     pos:self.pos
-                    size:self.size
+                    size:self.size # para se referir ao prórpio widget
     BoxLayout:
         orientation:'horizontal'
         size_hint: (1,0.1)
@@ -20,7 +20,7 @@
             id: bt_mover
             text: "Mover"
             background_color: [1,0,0,1]
-            on_release: root.command()
+            on_release: root.command() # acessa o widget raiz -> MyWidget comando presente no raiz
         BoxLayout:
             orientation:'vertical'
             Label:

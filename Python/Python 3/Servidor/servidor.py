@@ -5,7 +5,7 @@ class Servidor():
     Classe Servidor - API Socket
     """
 
-    def __init__(self, host, port): # cria o objeto socket
+    def __init__(self, host, port): # cria o objeto socket para comunicação
         """
         Construtor da classe servidor
         """

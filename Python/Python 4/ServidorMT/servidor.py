@@ -60,8 +60,8 @@ class ServidorMT(Servidor):
         """
         Construtor da classe ServidorMT
         """
-        super().__init__(host,port)
-        self.__threadPool = {}
+        super().__init__(host,port) # super é utilizado para "herdar" o método da classe mãe
+        self.__threadPool = {} # cria um dicionário de theads 
     
     def start(self):
         """
@@ -75,8 +75,8 @@ class ServidorMT(Servidor):
             print("Servidor iniciado em ",self._host,": ", self._port)
             while True:
                 con, client = self.__tcp.accept()
-                self.__threadPool[client] = threading.Thread(target=self._service,args=(con,client))
-                self.__threadPool[client].start()
+                self.__threadPool[client] = threading.Thread(target=self._service,args=(con,client)) # cria uma nova thead para tratar individualmente cada cliente
+                self.__threadPool[client].start() # comando não bloqueante 
 
         except Exception as e:
             print("Erro ao inicializar o servidor",e.args)

@@ -11,6 +11,7 @@ def contador(inicio, fim):
 # Execução sem a utilização de threads
 print("Execução sem threads - Sequencial")
 ti = time.perf_counter()
+# execução individual de cada contador 
 contador(0, 5)
 contador(5, 10)
 print(f"Tempo gasto: {time.perf_counter()-ti} segundos")
@@ -19,6 +20,7 @@ print(f"Tempo gasto: {time.perf_counter()-ti} segundos")
 # Execução com a utilização de threads
 print("Execução com threads - Concorrente")
 ti = time.perf_counter()
+# Criação de Theads para cada processo a fim de otimizar o tempo da execução
 t1 = threading.Thread(target=contador, args=(0, 5), name='T1')
 t2 = threading.Thread(target=contador, args=(5, 10), name='T2')
 t1.start()

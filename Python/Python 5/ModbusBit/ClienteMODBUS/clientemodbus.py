@@ -35,8 +35,7 @@ class ClienteMODBUS():
                 elif sel =='2':
                     tipo = input ("""Qual tipo de dado deseja escrever? (1- Holding Register) |2- Coil) :""")
                     addr = input (f"Digite o endereço da tabela MODBUS: ")
-                    valor = input (f"Digite o valor que deseja escrever: ")
-                    self.escreveDado(int(tipo),int(addr),int(valor))
+                    self.escreveDado(int(tipo),int(addr))
 
                 elif sel=='3':
                     scant = input("Digite o tempo de varredura desejado [s]: ")
@@ -55,7 +54,11 @@ class ClienteMODBUS():
         Método para leitura de um dado da Tabela MODBUS
         """
         if tipo == 1:
-            return self._cliente.read_holding_registers(addr,1)[0]
+            dados = self._cliente.read_holding_registers(addr,1)[0]
+            binary_string = format(dados, '016b')
+            lista_bit = [int(bit) for bit in binary_string]
+
+            return lista_bit
 
         if tipo == 2:
             return self._cliente.read_coils(addr,1)[0]
@@ -66,12 +69,23 @@ class ClienteMODBUS():
         if tipo == 4:
             return self._cliente.read_discrete_inputs(addr,1)[0]
 
-    def escreveDado(self, tipo, addr, valor):
+    def escreveDado(self, tipo, addr):
         """
         Método para a escrita de dados na Tabela MODBUS
         """
         if tipo == 1:
-            return self._cliente.write_single_register(addr,valor)
+            valor = self._cliente.read_holding_registers(addr,1)[0]
+            binary_string = format(valor, '016b')
+            lista_bit = [int(bit) for bit in binary_string]
+            pos = int(input("Digite a posição do bit que quer modificar (0-15): "))
+
+            if lista_bit[pos] == 1:
+                lista_bit[pos] = 0
+            else: 
+                lista_bit[pos] = 1
+
+            dado_novo = int(''.join(map(str, lista_bit)), 2)
+            return self._cliente.write_single_register(addr,dado_novo)
 
         if tipo == 2:
             return self._cliente.write_single_coil(addr,valor)

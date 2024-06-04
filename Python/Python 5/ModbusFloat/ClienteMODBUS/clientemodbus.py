@@ -1,4 +1,6 @@
 from pyModbusTCP.client import ModbusClient
+from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
+from pymodbus.constants import Endian
 from time import sleep
 
 class ClienteMODBUS():
@@ -36,7 +38,7 @@ class ClienteMODBUS():
                     tipo = input ("""Qual tipo de dado deseja escrever? (1- Holding Register) |2- Coil) :""")
                     addr = input (f"Digite o endereço da tabela MODBUS: ")
                     valor = input (f"Digite o valor que deseja escrever: ")
-                    self.escreveDado(int(tipo),int(addr),int(valor))
+                    self.escreveDado(int(tipo),int(addr),float(valor))
 
                 elif sel=='3':
                     scant = input("Digite o tempo de varredura desejado [s]: ")
@@ -55,7 +57,10 @@ class ClienteMODBUS():
         Método para leitura de um dado da Tabela MODBUS
         """
         if tipo == 1:
-            return self._cliente.read_holding_registers(addr,1)[0]
+            dado = self._cliente.read_holding_registers(addr,2)
+            decoder = BinaryPayloadDecoder.fromRegisters(dado)
+            valor_float = decoder.decode_32bit_float()
+            return valor_float
 
         if tipo == 2:
             return self._cliente.read_coils(addr,1)[0]
@@ -71,7 +76,10 @@ class ClienteMODBUS():
         Método para a escrita de dados na Tabela MODBUS
         """
         if tipo == 1:
-            return self._cliente.write_single_register(addr,valor)
+            buider = BinaryPayloadBuilder()
+            buider.add_32bit_float(valor)
+            payload = buider.to_registers()
+            return self._cliente.write_multiple_registers(addr,payload)
 
         if tipo == 2:
             return self._cliente.write_single_coil(addr,valor)

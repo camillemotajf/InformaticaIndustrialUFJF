@@ -3,6 +3,7 @@ from contas import Conta
 class Banco():
     contas = []
     senhaF = 5658
+    
     def __init__(self):
         self.contas.append(Conta(numero=1,titular="João", senha= 1234, saldoi=300))
 

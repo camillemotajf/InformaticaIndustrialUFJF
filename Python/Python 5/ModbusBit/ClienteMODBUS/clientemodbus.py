@@ -23,7 +23,7 @@ class ClienteMODBUS():
         try:
             atendimento = True
             while atendimento:
-                sel = input("Deseja realizar uma leitura, escrita ou configuração? (1- Leitura | 2- Escrita | 3- Configuração |4- Sair): ")
+                sel = input("Deseja realizar uma leitura, escrita ou configuração? (1- Leitura | 2- Escrita | 3- Configuração | 4- Sair): ")
                 
                 if sel == '1':
                     tipo = input ("""Qual tipo de dado deseja ler? (1- Holding Register) |2- Coil |3- Input Register |4- Discrete Input) :""")
@@ -74,7 +74,7 @@ class ClienteMODBUS():
         Método para a escrita de dados na Tabela MODBUS
         """
         if tipo == 1:
-            valor = self._cliente.read_holding_registers(addr,1)[0]
+            valor = self._cliente.read_holding_registers(addr,1)[0] # faz outra leitura aqui
             binary_string = format(valor, '016b')
             lista_bit = [int(bit) for bit in binary_string]
             pos = int(input("Digite a posição do bit que quer modificar (0-15): "))

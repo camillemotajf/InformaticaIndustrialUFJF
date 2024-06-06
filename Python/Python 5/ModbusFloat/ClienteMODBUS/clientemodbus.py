@@ -78,7 +78,7 @@ class ClienteMODBUS():
         if tipo == 1:
             buider = BinaryPayloadBuilder()
             buider.add_32bit_float(valor)
-            payload = buider.to_registers()
+            payload = buider.to_registers() # coloca no formato para ser posto nos registradores
             return self._cliente.write_multiple_registers(addr,payload)
 
         if tipo == 2:

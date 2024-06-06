@@ -8,7 +8,13 @@ class MyWidget(BoxLayout):
         """
         Método simples para incremento do valor mostrado no label
         """
-        self.ids['lb'].text = str(int(self.ids.lb.text) + 1) 
+        self.ids.lb.text = str(int(self.ids.lb.text) + 1) 
+        self.ids.lb_2.text = 'Incrementando'
+
+    def changelb2(self):
+        self.ids.lb.text = '0'
+        self.ids.lb_2.text = 'Limpando'
+
 
 class BasicApp(App):
     def build(self):

@@ -1,20 +1,21 @@
 #:kivy 1.11.1
 <MyWidget>:
-    orientation: 'horizontal'
-    Button:
-        id: btn
-        text: 'Incrementar'
-        background_color: [1,0,0,1]
-        on_press: root.changelb()
+    orientation: 'vertical'
     Label:
         id: lb
         text: '0'
     BoxLayout:
-        id: bxa
+        orientation:'horizontal'
+        pos_hint: {'center_x': 0.5, 'center_y':0.5}
+        Button:
+            id: btn
+            text: 'Incrementar'
+            background_color: [1,0,0,1]
+            on_press: root.changelb()
         Button:
             id: bt_limpar
             text: 'Limpar'
-            on_press:  lb.text = '0'
-        Label:
-            id:lb_2
-            text: 'Label2'
+            on_press: root.changelb2()
+    Label:
+        id:lb_2
+        text: "Inicio"

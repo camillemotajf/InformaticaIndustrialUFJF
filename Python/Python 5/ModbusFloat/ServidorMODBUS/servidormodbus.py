@@ -25,7 +25,7 @@ class ServidorMODBUS():
             print("Servidor MODBUS em execução")
             while True:
                 # modificação de uma palavra em um registro da tabela (endereço, valor)
-                self._db.set_holding_registers(1000,[random.randrange(int(0.95*400),int(1.05*400))]) 
+                # self._db.set_holding_registers(1000,[random.randrange(int(0.95*400),int(1.05*400))]) 
                 print('======================')
                 print("Tabela MODBUS")
                 print(f'Holding Register \r\n R1000: {self._db.get_holding_registers(1000)} \r\n R2000: {self._db.get_holding_registers(2000)}')

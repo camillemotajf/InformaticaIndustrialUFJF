@@ -1,0 +1,81 @@
+#:kivy 1.11.1
+
+<MyWidget>:
+    orientation: 'vertical'
+    padding: 20
+    spacing: 10
+
+    BoxLayout:
+        orientation:'horizontal'
+        TextInput:
+            id: ip_input
+            hint_text: "IP do Servidor"
+            multiline: False
+
+        TextInput:
+            id: port_input
+            hint_text: "Porta"
+            multiline: False
+            input_filter: 'int'
+
+    Button:
+        text: "Conectar"
+        on_press: app.connect_to_server()
+
+    Label:
+        id: status_label
+        text: "Status: Desconectado"
+
+    TextInput:
+        id: endereco
+        hint_text: "Endereço"
+        multiline: False
+        input_filter: 'int'
+
+    BoxLayout:
+        orientation: 'horizontal'
+        CheckBox:
+            id: leitura_unica
+            group: 'leitura'
+        Label:
+            text: 'Leitura Única'
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        CheckBox:
+            id: leitura_continua
+            group: 'leitura'
+        Label:
+            text: 'Leitura Contínua'
+    GridLayout:
+        cols: 2
+        ToggleButton:
+            id: bobina
+            text: 'Bobina'
+            group: 'group1'
+            on_press: app.choose_table('bobina')
+
+        ToggleButton:
+            id: entrada_discreta
+            text: 'Entrada Discreta'
+            group: 'group1'
+            on_press: app.choose_table('entrada_discreta')
+
+        ToggleButton:
+            id: registrador_entrada
+            text: 'Registrador de Entrada'
+            group: 'group1'
+            on_press: app.choose_table('registrador_entrada')
+
+        ToggleButton:
+            id: registrador_saida
+            text: 'Registrador de Saída'
+            group: 'group1'
+            on_press: app.choose_table('registrador_saida')
+
+    Label:
+        id: leitura
+        text: "Leitura: "
+    
+
+    

@@ -20,7 +20,7 @@
 
     Button:
         text: "Conectar"
-        on_press: app.connect_to_server()
+        on_press: root.connect_to_server()
 
     Label:
         id: status_label
@@ -53,25 +53,25 @@
             id: bobina
             text: 'Bobina'
             group: 'group1'
-            on_press: app.choose_table('bobina')
+            on_press: root.choose_table('bobina')
 
         ToggleButton:
             id: entrada_discreta
             text: 'Entrada Discreta'
             group: 'group1'
-            on_press: app.choose_table('entrada_discreta')
+            on_press: root.choose_table('entrada_discreta')
 
         ToggleButton:
             id: registrador_entrada
             text: 'Registrador de Entrada'
             group: 'group1'
-            on_press: app.choose_table('registrador_entrada')
+            on_press: root.choose_table('registrador_entrada')
 
         ToggleButton:
             id: registrador_saida
             text: 'Registrador de Saída'
             group: 'group1'
-            on_press: app.choose_table('registrador_saida')
+            on_press: root.choose_table('registrador_saida')
 
     Label:
         id: leitura

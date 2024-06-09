@@ -1,10 +1,24 @@
 #:kivy 1.11.1
 <MyWidget>:
-    Button:
-        id: btn
-        text: 'Incrementar'
-        background_color: [1,0,0,1]
-        size_hint: (0.2,0.2)
-        pos_hint: {'center_x':1,'center_y':1}
+    orientation: 'vertical'
+    Label:
+        id:lb
+        text: '0'
+    BoxLayout:
+        orientation:'horizontal'
+        Button:
+            id: btn
+            text: 'Incrementar'
+            background_color: [1,0,0,1]
+            on_press: root.incrementar()
+        Button:
+            text:'Limpar'
+            on_press: lb.text = '0'
+            on_press: input.text = ''
+    TextInput:
+        id: input
+        hint_text: 'Adicionar número'
+
+
         
 

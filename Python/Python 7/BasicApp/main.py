@@ -1,10 +1,17 @@
 import kivy
 from kivy.app import App
-from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
-class MyWidget(FloatLayout):
-    pass
+class MyWidget(BoxLayout):
+    def incrementar(self):
+        c = int(self.ids.lb.text)
+        if self.ids.input.text:
+            c += int(self.ids.input.text)
+        else:
+            c += 1
+        self.ids.lb.text = str(c)
+
 
 class BasicApp(App):
     def build(self):

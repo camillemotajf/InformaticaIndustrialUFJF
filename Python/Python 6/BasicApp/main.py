@@ -11,9 +11,9 @@ class MyWidget(BoxLayout):
         self.ids.lb.text = str(int(self.ids.lb.text) + 1) 
         self.ids.lb_2.text = 'Incrementando'
 
-    def changelb2(self):
-        self.ids.lb.text = '0'
-        self.ids.lb_2.text = 'Limpando'
+    # def changelb2(self):
+    #     self.ids.lb.text = '0'
+    #     self.ids.lb_2.text = 'Limpando'
 
 
 class BasicApp(App):
